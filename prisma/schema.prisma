@@ -1,0 +1,49 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model alumno {
+    idalumno         Int    @id @default(autoincrement())
+    nombre           String @db.VarChar(200)
+    telefono         String @db.VarChar(45)
+    fecha_nacimiento String @db.VarChar(45)
+    sede             String @db.VarChar(45)
+    pago             pago[]
+    sexo             String @db.VarChar(45)
+    domicilio        String @db.VarChar(200)
+    barrio           String @db.VarChar(200)
+    tutor            String @db.VarChar(200)
+    escolaridad      String @db.VarChar(200)
+}
+
+model pago {
+    idpago       Int     @id @default(autoincrement())
+    idalumno     Int
+    fecha_pago   String  @db.VarChar(45)
+    tipo_pago    String  @db.VarChar(45)
+    nota_venta   String  @db.VarChar(45)
+    fecha_inicio String? @db.VarChar(45)
+    alumno       alumno  @relation(fields: [idalumno], references: [idalumno], onDelete: NoAction, onUpdate: NoAction, map: "fk_pago_alumno")
+
+    @@index([idalumno], map: "fk_pago_alumno_idx")
+}
+
+model usuario {
+    idusuario  Int     @id @default(autoincrement())
+    correo     String  @unique @db.VarChar(200)
+    contrasena String
+    nombre     String  @db.VarChar(200)
+    imagen     String? @db.VarChar(255) // Campo para la URL de la imagen
+}
+
+model inventario {
+    idinventario Int     @id @default(autoincrement())
+    nombre       String  @db.VarChar(200)
+    detalles     String? @db.VarChar(400)
+    estado       String  @db.VarChar(200)
+}
